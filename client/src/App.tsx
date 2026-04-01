@@ -1,26 +1,14 @@
 import { useEffect, useState } from "react";
 import Products from "./components/Products";
 import axios from "axios";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Cart from "./components/Cart";
+import type { productsResponseType, productType } from "./types/productType";
 
 
-export type productType = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  period: "one-time" | "monthly" | "yearly";
-  tag: string;
-  tagType: string;
-  features: string[];
-  icon: string;
-  img: string;
-};
 
-type productsResponseType = {
-  success: boolean;
-  message: string;
-  products: productType[];
-};
+
 
 const App = () => {
   const [products, setProducts] = useState<productType[]>([]);
@@ -32,9 +20,24 @@ const App = () => {
     fetchProducts();
   }, []);
   // console.log(products);
+  const [isActive, setIsActive] = useState(true);
+  const [carts, setCarts] = useState<productType[]>([]);
+  console.log(carts);
   return (
+
     <div>
-      <Products products={products} />
+      <Navbar />
+      <div>
+        <button onClick={() => setIsActive(true)} className={`btn btn-primary ${isActive ? 'bg-green-500' : ''}`}>product</button>
+        <button onClick={() => setIsActive(false)} className={`btn btn-primary ${!isActive ? 'bg-green-500' : ''}`}>cart</button>
+      </div>
+      {
+        isActive ?
+          <Products products={products} carts={carts} setCarts={setCarts} />
+          :
+          <Cart carts={carts} setCarts={setCarts} />
+      }
+      <Footer />
     </div>
   );
 };
